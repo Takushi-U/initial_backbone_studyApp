@@ -8,7 +8,6 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.static('./', {index: 'index.html'}));
 });
-// /memos_indexにアクセスすると、index.htmlをもらう。
 app.get('/', memo.findAll);
 app.get('/:id', memo.findById);
 app.post('/', memo.addMemo);

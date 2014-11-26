@@ -1,3 +1,4 @@
+var app ={};
 // var Memo = Backbone.Model.extend({
 //   urlRoot: "/memos",
 //   idAttribute: "_id",
@@ -200,4 +201,49 @@ var ItemView = Backbone.View.extend({
   }
 });
 
+
+//第5回 ルーティングの定義
+var AppRouter = Backbone.Router.extend({
+  routes: {
+    "": "home",
+    "create": "add",
+    ":id/edit": "edit"
+  },
+  initialize: function(){
+    _.binAll(this, "home");
+    _.binAll(this, "add");
+    _.binAll(this, "edit");
+    this.collection = new MemoList();
+    this.headerView = new HeaderView({el: $(".navbar")});
+    this.editView = new EditView({el: $("#editViewtForm"), collection: this.collection});
+    this.listView = new ListView({el: $("#memoList"), collection: this.collection});
+  },
+  home: function(){
+    this.editView.hideView();
+  },
+  add: function(){
+    this.editView.model = new Memo(null, {collection: this.collection});
+    this.editView.render();
+  },
+  edit: function(){
+    this.editView.model = this.collection.get(id);
+    if(this.editView.model){
+      this.editView.render();
+    }
+  }
+});
+
+var HeaderView = Backbone.View.extend({
+  events: {
+    "click .create":"onCreate"
+  },
+  initialize: function(){
+    _.bindAll("this", "onCreate");
+  },
+  onCreate: function(){
+    app.router.navigate("create", {trigger:true});
+  }
+});
+app.router = new AppRouter();
 var appView = new AppView({el:$("#main")});
+
